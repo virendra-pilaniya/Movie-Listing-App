@@ -23,7 +23,7 @@ function onSearchInput() {
 
 function searchMovies() {
     if (searchTerm.length > 0) {
-        currentPage = 1; // Reset current page to 1 when doing a new search
+        currentPage = 1;
         fetchMovies(searchTerm);
     }
 }
@@ -52,7 +52,7 @@ async function fetchMovies(searchTerm) {
 function displayError(errorMessage) {
     resultGrid.innerHTML = `<p class="error-message">${errorMessage}</p>`;
     searchList.innerHTML = '';
-    paginationContainer.innerHTML = ''; // Clear pagination when displaying error
+    paginationContainer.innerHTML = '';
     movieDetailContainer.style.display = 'none';
 }
 
@@ -127,7 +127,7 @@ async function showMovieDetails(movieId) {
 
 
 function goToPrevPage() {
-    
+
     if (currentPage > 1) {
         currentPage--;
         fetchMovies(searchTerm);
@@ -176,7 +176,6 @@ function showMovieRatingAndComments(rating, comments) {
     movieRatingDiv.innerHTML = `Rating: ${rating}`;
     movieCommentsDiv.innerHTML = `Comments: ${comments}`;
 
-    // Hide the input fields and save button
     const ratingInput = document.getElementById('rating');
     const commentsInput = document.getElementById('comments');
     const saveButton = document.getElementById('save-button');
@@ -187,7 +186,6 @@ function showMovieRatingAndComments(rating, comments) {
 }
 
 function showRatingAndCommentInput(movieId) {
-    // Display input fields for rating and comments in the movie details container
     const ratingInputHtml = `
         <label for="rating">Rating:</label>
         <input type="number" id="rating" min="1" max="10">
@@ -207,7 +205,6 @@ function showRatingAndCommentInput(movieId) {
     movieRatingDiv.innerHTML = ratingInputHtml;
     movieCommentsDiv.innerHTML = commentInputHtml + saveButtonHtml;
 
-    // Hide the existing rating and comments
     const ratingDisplay = movieRatingDiv.textContent;
     const commentsDisplay = movieCommentsDiv.textContent;
 
