@@ -1,11 +1,12 @@
 const API_KEY = '624c3f71';
-const ITEMS_PER_PAGE = 14;
+const ITEMS_PER_PAGE = 10;
 const movieSearchBox = document.getElementById('movie-search-box');
 const searchButton = document.querySelector('.search-button');
 const searchList = document.getElementById('search-list');
 const resultGrid = document.getElementById('result-grid');
 const movieDetailsContainer = document.querySelector('.movie-details-container');
 const paginationContainer = document.querySelector('.pagination');
+const movieDetailContainer = document.querySelector('.movie-details-container');
 
 let searchTerm = '';
 let currentPage = 1;
@@ -38,6 +39,7 @@ async function fetchMovies(searchTerm) {
             currentMovies = data.Search;
             displayMovieList(currentMovies);
             updatePaginationButtons();
+            movieDetailContainer.style.display = 'none';
         } else {
             displayError("No movies found for the given search term.");
         }
@@ -51,7 +53,7 @@ function displayError(errorMessage) {
     resultGrid.innerHTML = `<p class="error-message">${errorMessage}</p>`;
     searchList.innerHTML = '';
     paginationContainer.innerHTML = ''; // Clear pagination when displaying error
-    document.querySelector('.movie-details-container').style.display = "none";
+    movieDetailContainer.style.display = 'none';
 }
 
 function displayMovieList(movies) {
@@ -95,7 +97,7 @@ async function showMovieDetails(movieId) {
         const response = await fetch(URL);
         const data = await response.json();
         if (data.Response === "True") {
-            document.querySelector('.movie-details-container').style.display = "flex";
+            movieDetailContainer.style.display = "flex";
             const { Title, Year, Genre, Plot, Poster } = data;
             document.getElementById('movie-poster').src = Poster !== "N/A" ? Poster : "image_not_found.png";
             document.getElementById('movie-title').textContent = Title;
@@ -113,6 +115,7 @@ async function showMovieDetails(movieId) {
 
 
 function goToPrevPage() {
+    
     if (currentPage > 1) {
         currentPage--;
         fetchMovies(searchTerm);
