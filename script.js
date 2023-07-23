@@ -84,6 +84,7 @@ function displayMovieList(movies) {
 
         movieListItem.addEventListener('click', () => {
             showMovieDetails(movie.imdbID);
+            scrollToBottom();
         });
 
         searchList.appendChild(movieListItem);
@@ -98,12 +99,23 @@ async function showMovieDetails(movieId) {
         const data = await response.json();
         if (data.Response === "True") {
             movieDetailContainer.style.display = "flex";
-            const { Title, Year, Genre, Plot, Poster } = data;
+            const { Title, Year, Genre, Plot, Poster, Director, Actors, Runtime } = data;
             document.getElementById('movie-poster').src = Poster !== "N/A" ? Poster : "image_not_found.png";
             document.getElementById('movie-title').textContent = Title;
             document.getElementById('movie-year').textContent = `Year: ${Year}`;
             document.getElementById('movie-genre').textContent = `Genre: ${Genre}`;
             document.getElementById('movie-plot').textContent = `Plot: ${Plot}`;
+            document.getElementById('movie-director').textContent = `Director: ${Director}`;
+            document.getElementById('movie-actors').textContent = `Actors: ${Actors}`;
+            document.getElementById('movie-runtime').textContent = `Runtime: ${Runtime}`;
+
+            const movieData = localStorage.getItem(movieId);
+            if (movieData) {
+                const { rating, comments } = JSON.parse(movieData);
+                showMovieRatingAndComments(rating, comments);
+            } else {
+                showRatingAndCommentInput(movieId);
+            }
         } else {
             displayError("Unable to fetch movie details.");
         }
@@ -150,4 +162,72 @@ function updatePaginationButtons() {
     } else {
         nextButton.disabled = false;
     }
+}
+
+function scrollToBottom() {
+    const scrollElement = document.querySelector('.pagination');
+    scrollElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function showMovieRatingAndComments(rating, comments) {
+    const movieRatingDiv = document.getElementById('movie-rating');
+    const movieCommentsDiv = document.getElementById('movie-comments');
+
+    movieRatingDiv.innerHTML = `Rating: ${rating}`;
+    movieCommentsDiv.innerHTML = `Comments: ${comments}`;
+
+    // Hide the input fields and save button
+    const ratingInput = document.getElementById('rating');
+    const commentsInput = document.getElementById('comments');
+    const saveButton = document.getElementById('save-button');
+
+    ratingInput.style.display = "none";
+    commentsInput.style.display = "none";
+    saveButton.style.display = "none";
+}
+
+function showRatingAndCommentInput(movieId) {
+    // Display input fields for rating and comments in the movie details container
+    const ratingInputHtml = `
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" min="1" max="10">
+    `;
+    const commentInputHtml = `
+        <label for="comments">Comments:</label>
+        <textarea id="comments" rows="4"></textarea>
+    `;
+
+    const saveButtonHtml = `
+        <button id="save-button" onclick="saveRatingAndComments('${movieId}')">Save</button>
+    `;
+
+    const movieRatingDiv = document.getElementById('movie-rating');
+    const movieCommentsDiv = document.getElementById('movie-comments');
+
+    movieRatingDiv.innerHTML = ratingInputHtml;
+    movieCommentsDiv.innerHTML = commentInputHtml + saveButtonHtml;
+
+    // Hide the existing rating and comments
+    const ratingDisplay = movieRatingDiv.textContent;
+    const commentsDisplay = movieCommentsDiv.textContent;
+
+    if (ratingDisplay.includes("Rating")) {
+        const currentRating = ratingDisplay.split(":")[1].trim();
+        document.getElementById('rating').value = currentRating;
+    }
+
+    if (commentsDisplay.includes("Comments")) {
+        const currentComments = commentsDisplay.split(":")[1].trim();
+        document.getElementById('comments').value = currentComments;
+    }
+}
+
+function saveRatingAndComments(movieId) {
+    const ratingInput = document.getElementById('rating');
+    const commentsInput = document.getElementById('comments');
+    const rating = ratingInput.value;
+    const comments = commentsInput.value;
+    const movieData = { rating, comments };
+    localStorage.setItem(movieId, JSON.stringify(movieData));
+    showMovieRatingAndComments(rating, comments);
 }

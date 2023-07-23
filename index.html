@@ -37,17 +37,34 @@
         </div>
         <div class="movie-info">
             <div class="movie-title" id="movie-title"></div>
-            <div class="movie-rating" id="movie-rating"></div>
             <div class="movie-year" id="movie-year"></div>
             <div class="movie-genre" id="movie-genre"></div>
             <div class="movie-plot" id="movie-plot"></div>
+            <!-- Additional movie details -->
+            <div class="movie-director" id="movie-director"></div>
+            <div class="movie-actors" id="movie-actors"></div>
+            <div class="movie-runtime" id="movie-runtime"></div>
+            <div class="movie-rating" id="movie-rating"></div>
+            <div class="movie-comments" id="movie-comments"></div>
+            <!-- Add more details as needed -->
         </div>
+
+        <div class="rating-input">
+            <!-- <label for="rating">Rating:</label> -->
+            <input type="number" id="rating" min="1" max="10">
+        </div>
+        <div class="comment-input">
+            <!-- <label for="comments">Comments:</label> -->
+            <textarea id="comments" rows="2"></textarea>
+        </div>
+        <button id="save-button" onclick="saveRatingAndComments()">Save</button>
     </div>
+    
         <div class="pagination">
             <button class="prev-button" onclick="goToPrevPage()">&lt; Prev</button>
             <button class="next-button" onclick="goToNextPage()">Next &gt;</button>
         </div>
-    <!-- movie app js -->
+    
     <script src="script.js"></script>
 </body>
 </html>
